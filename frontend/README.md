@@ -1,6 +1,6 @@
-# Decentralised Chat - Frontend
+# TempChat - Frontend
 
-Next.js frontend for the Decentralised Chat application.
+Next.js frontend for the TempChat application.
 
 ## 🚀 Local Development
 

@@ -1,7 +1,7 @@
 {
-    "name": "decentralised-chat-frontend",
+    "name": "tempchat-frontend",
     "version": "1.0.0",
-    "description": "Decentralised Chat - Frontend (Next.js)",
+    "description": "TempChat - Frontend (Next.js)",
     "scripts": {
         "dev": "next dev",
         "build": "next build",

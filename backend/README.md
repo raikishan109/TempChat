@@ -1,6 +1,6 @@
-# Decentralised Chat - Backend
+# TempChat - Backend
 
-Express + Socket.io + MongoDB backend for the Decentralised Chat application.
+Express + Socket.io + MongoDB backend for the TempChat application.
 
 ## 🚀 Local Development
 

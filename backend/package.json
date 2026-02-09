@@ -1,7 +1,7 @@
 {
-    "name": "decentralised-chat-backend",
+    "name": "tempchat-backend",
     "version": "1.0.0",
-    "description": "Decentralised Chat - Backend (Socket.io + MongoDB)",
+    "description": "TempChat - Backend (Socket.io + MongoDB)",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",

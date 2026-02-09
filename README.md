@@ -1,11 +1,11 @@
-# 🚀 Decentralised Chat Application
+# 🚀 TempChat Application
 
 A real-time, privacy-focused chat application built with Next.js, Express, Socket.io, and MongoDB.
 
 ## 📁 Clean Project Structure
 
 ```
-Decentralised Chat Web/
+TempChat/
 ├── frontend/          # Next.js frontend application
 ├── backend/           # Express + Socket.io backend server
 ├── README.md          # This file
