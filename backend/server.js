@@ -33,6 +33,20 @@ mongoose.connect(MONGODB_URI)
 
 // REST API Routes
 
+// Health check endpoint
+app.get('/', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'TempChat Backend API is running! 🚀',
+        version: '1.0.0',
+        endpoints: {
+            auth: '/api/auth/login, /api/auth/signup',
+            rooms: '/api/rooms, /api/rooms/:code',
+            messages: '/api/rooms/:code/messages'
+        }
+    });
+});
+
 // ============ AUTHENTICATION ROUTES ============
 
 // Signup
