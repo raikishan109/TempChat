@@ -175,6 +175,23 @@ app.post('/api/rooms', async (req, res) => {
     }
 });
 
+// Delete room
+app.delete('/api/rooms/:code', async (req, res) => {
+    try {
+        const roomCode = req.params.code.toUpperCase();
+
+        // Delete all messages in the room
+        await Message.deleteMany({ roomCode });
+
+        // Delete the room
+        await Room.findOneAndDelete({ code: roomCode });
+
+        res.json({ success: true, message: 'Room deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Socket.io Real-time Communication
 const activeUsers = new Map(); // roomCode -> Set of usernames
 

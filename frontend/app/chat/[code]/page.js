@@ -204,6 +204,30 @@ export default function ChatPage() {
     alert('Chat code copied to clipboard!');
   };
 
+  const deleteRoom = async () => {
+    const confirmDelete = confirm(
+      '⚠️ Are you sure you want to delete this room?\n\nThis will:\n• Delete all messages\n• Remove the room permanently\n• Disconnect all users\n\nThis action cannot be undone!'
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`${SERVER_URL}/api/rooms/${chatCode}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        alert('✅ Room deleted successfully!');
+        router.push('/');
+      } else {
+        throw new Error('Failed to delete room');
+      }
+    } catch (error) {
+      console.error('Error deleting room:', error);
+      alert('❌ Failed to delete room. Please try again.');
+    }
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -251,7 +275,15 @@ export default function ChatPage() {
             </p>
           </div>
         </div>
-        <Timer timeRemaining={timeRemaining} />
+        <div className="header-right">
+          <Timer timeRemaining={timeRemaining} />
+          <button className="btn-delete" onClick={deleteRoom} title="Delete Room">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <span>Delete Room</span>
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -315,6 +347,12 @@ export default function ChatPage() {
           gap: 16px;
         }
 
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
         .btn-back {
           display: flex;
           align-items: center;
@@ -338,6 +376,32 @@ export default function ChatPage() {
         }
 
         .btn-back svg {
+          flex-shrink: 0;
+        }
+
+        .btn-delete {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          color: #ef4444;
+          cursor: pointer;
+          padding: 10px 16px;
+          border-radius: var(--radius);
+          transition: all 0.3s ease;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        .btn-delete:hover {
+          background: #ef4444;
+          border-color: #ef4444;
+          color: white;
+          transform: scale(1.02);
+        }
+
+        .btn-delete svg {
           flex-shrink: 0;
         }
 
@@ -486,6 +550,22 @@ export default function ChatPage() {
         @media (max-width: 768px) {
           .chat-header {
             padding: 12px 16px;
+            flex-wrap: wrap;
+          }
+
+          .header-right {
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+
+          .btn-delete span,
+          .btn-back span {
+            display: none;
+          }
+
+          .btn-delete,
+          .btn-back {
+            padding: 10px;
           }
 
           .room-code {

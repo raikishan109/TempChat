@@ -62,7 +62,7 @@ export default function LoginPage() {
               </linearGradient>
             </defs>
           </svg>
-          <h1 className="logo-title">PrivateChat</h1>
+          <h1 className="logo-title">TempChat</h1>
           <p className="logo-subtitle">Secure & Anonymous Messaging</p>
         </div>
 
