@@ -7,7 +7,7 @@ import MessageList from '../../../components/MessageList';
 import FileUpload from '../../../components/FileUpload';
 import Timer from '../../../components/Timer';
 
-const SERVER_URL = 'http://localhost:3001';
+const SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001';
 
 export default function ChatPage() {
   const params = useParams();

@@ -3,167 +3,167 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const SERVER_URL = 'http://localhost:3001';
+const SERVER_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function LoginPage() {
-    const router = useRouter();
-    const [isLogin, setIsLogin] = useState(true);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-        try {
-            const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
-            const response = await fetch(`${SERVER_URL}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
+    try {
+      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
+      const response = await fetch(`${SERVER_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
 
-            const data = await response.json();
+      const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Authentication failed');
-            }
+      if (!response.ok) {
+        throw new Error(data.error || 'Authentication failed');
+      }
 
-            // Store user in localStorage
-            localStorage.setItem('user', JSON.stringify(data.user));
+      // Store user in localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
 
-            // Redirect to home
-            router.push('/');
+      // Redirect to home
+      router.push('/');
 
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="login-page">
-            <div className="login-container">
-                {/* Logo */}
-                <div className="logo-section fade-in">
-                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                        <rect width="60" height="60" rx="12" fill="url(#gradient)" />
-                        <path d="M18 30L27 39L42 21" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                        <defs>
-                            <linearGradient id="gradient" x1="0" y1="0" x2="60" y2="60">
-                                <stop stopColor="#6366f1" />
-                                <stop offset="1" stopColor="#8b5cf6" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <h1 className="logo-title">PrivateChat</h1>
-                    <p className="logo-subtitle">Secure & Anonymous Messaging</p>
-                </div>
+  return (
+    <div className="login-page">
+      <div className="login-container">
+        {/* Logo */}
+        <div className="logo-section fade-in">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <rect width="60" height="60" rx="12" fill="url(#gradient)" />
+            <path d="M18 30L27 39L42 21" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <defs>
+              <linearGradient id="gradient" x1="0" y1="0" x2="60" y2="60">
+                <stop stopColor="#6366f1" />
+                <stop offset="1" stopColor="#8b5cf6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <h1 className="logo-title">PrivateChat</h1>
+          <p className="logo-subtitle">Secure & Anonymous Messaging</p>
+        </div>
 
-                {/* Login/Signup Form */}
-                <div className="form-card card slide-in">
-                    <div className="form-header">
-                        <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
-                        <p>{isLogin ? 'Login to continue chatting' : 'Sign up to get started'}</p>
-                    </div>
+        {/* Login/Signup Form */}
+        <div className="form-card card slide-in">
+          <div className="form-header">
+            <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+            <p>{isLogin ? 'Login to continue chatting' : 'Sign up to get started'}</p>
+          </div>
 
-                    <form onSubmit={handleSubmit} className="auth-form">
-                        {error && (
-                            <div className="error-message fade-in">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                </svg>
-                                {error}
-                            </div>
-                        )}
+          <form onSubmit={handleSubmit} className="auth-form">
+            {error && (
+              <div className="error-message fade-in">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                {error}
+              </div>
+            )}
 
-                        <div className="form-group">
-                            <label htmlFor="username">Username</label>
-                            <input
-                                id="username"
-                                type="text"
-                                className="input"
-                                placeholder="Enter your username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                required
-                                minLength={3}
-                                maxLength={20}
-                                disabled={loading}
-                            />
-                            <span className="input-hint">3-20 characters</span>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input
-                                id="password"
-                                type="password"
-                                className="input"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                minLength={6}
-                                disabled={loading}
-                            />
-                            <span className="input-hint">Minimum 6 characters</span>
-                        </div>
-
-                        <button type="submit" className="btn btn-primary w-full" disabled={loading}>
-                            {loading ? (
-                                <>
-                                    <span className="spinner"></span>
-                                    {isLogin ? 'Logging in...' : 'Creating account...'}
-                                </>
-                            ) : (
-                                isLogin ? 'Login' : 'Sign Up'
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="form-footer">
-                        <p>
-                            {isLogin ? "Don't have an account?" : 'Already have an account?'}
-                            <button
-                                type="button"
-                                className="link-button"
-                                onClick={() => {
-                                    setIsLogin(!isLogin);
-                                    setError('');
-                                }}
-                                disabled={loading}
-                            >
-                                {isLogin ? 'Sign Up' : 'Login'}
-                            </button>
-                        </p>
-                    </div>
-                </div>
-
-                {/* Features */}
-                <div className="features-grid fade-in" style={{ animationDelay: '0.2s' }}>
-                    <div className="feature-item">
-                        <div className="feature-icon">🔒</div>
-                        <div className="feature-label">Encrypted</div>
-                    </div>
-                    <div className="feature-item">
-                        <div className="feature-icon">⏱️</div>
-                        <div className="feature-label">24h Auto-Delete</div>
-                    </div>
-                    <div className="feature-item">
-                        <div className="feature-icon">👤</div>
-                        <div className="feature-label">Anonymous</div>
-                    </div>
-                </div>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                id="username"
+                type="text"
+                className="input"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                minLength={3}
+                maxLength={20}
+                disabled={loading}
+              />
+              <span className="input-hint">3-20 characters</span>
             </div>
 
-            <style jsx>{`
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                className="input"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                disabled={loading}
+              />
+              <span className="input-hint">Minimum 6 characters</span>
+            </div>
+
+            <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <span className="spinner"></span>
+                  {isLogin ? 'Logging in...' : 'Creating account...'}
+                </>
+              ) : (
+                isLogin ? 'Login' : 'Sign Up'
+              )}
+            </button>
+          </form>
+
+          <div className="form-footer">
+            <p>
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
+              <button
+                type="button"
+                className="link-button"
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError('');
+                }}
+                disabled={loading}
+              >
+                {isLogin ? 'Sign Up' : 'Login'}
+              </button>
+            </p>
+          </div>
+        </div>
+
+        {/* Features */}
+        <div className="features-grid fade-in" style={{ animationDelay: '0.2s' }}>
+          <div className="feature-item">
+            <div className="feature-icon">🔒</div>
+            <div className="feature-label">Encrypted</div>
+          </div>
+          <div className="feature-item">
+            <div className="feature-icon">⏱️</div>
+            <div className="feature-label">24h Auto-Delete</div>
+          </div>
+          <div className="feature-item">
+            <div className="feature-icon">👤</div>
+            <div className="feature-label">Anonymous</div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
         .login-page {
           min-height: 100vh;
           display: flex;
@@ -349,6 +349,6 @@ export default function LoginPage() {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }
