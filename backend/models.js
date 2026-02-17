@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        expires: 86400 // Auto-delete after 24 hours
     },
     lastLogin: {
         type: Date,

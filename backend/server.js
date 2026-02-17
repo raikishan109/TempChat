@@ -28,7 +28,19 @@ app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/privatechat';
 mongoose.connect(MONGODB_URI)
-    .then(() => console.log('✅ MongoDB connected'))
+    .then(async () => {
+        console.log('✅ MongoDB connected');
+
+        // Ensure TTL indexes are created for auto-deletion
+        try {
+            await User.collection.createIndex({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+            await Room.collection.createIndex({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+            await Message.collection.createIndex({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+            console.log('✅ TTL indexes created for 24-hour auto-deletion');
+        } catch (error) {
+            console.log('⚠️ TTL indexes already exist or error:', error.message);
+        }
+    })
     .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // REST API Routes
