@@ -25,6 +25,35 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
+// Cleanup function to delete old data (24+ hours old)
+async function cleanupOldData() {
+    try {
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        // Delete old users
+        const deletedUsers = await User.deleteMany({
+            createdAt: { $lt: twentyFourHoursAgo }
+        });
+
+        // Delete old rooms
+        const deletedRooms = await Room.deleteMany({
+            createdAt: { $lt: twentyFourHoursAgo }
+        });
+
+        // Delete old messages
+        const deletedMessages = await Message.deleteMany({
+            createdAt: { $lt: twentyFourHoursAgo }
+        });
+
+        if (deletedUsers.deletedCount > 0 || deletedRooms.deletedCount > 0 || deletedMessages.deletedCount > 0) {
+            console.log(`🗑️ Cleanup completed: ${deletedUsers.deletedCount} users, ${deletedRooms.deletedCount} rooms, ${deletedMessages.deletedCount} messages deleted`);
+        }
+    } catch (error) {
+        console.error('❌ Cleanup error:', error);
+    }
+}
+
+
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/privatechat';
 mongoose.connect(MONGODB_URI)
@@ -40,6 +69,14 @@ mongoose.connect(MONGODB_URI)
         } catch (error) {
             console.log('⚠️ TTL indexes already exist or error:', error.message);
         }
+
+        // Run cleanup immediately on startup
+        console.log('🧹 Running initial cleanup...');
+        await cleanupOldData();
+
+        // Schedule cleanup to run every hour
+        setInterval(cleanupOldData, 60 * 60 * 1000); // Every 1 hour
+        console.log('✅ Scheduled hourly cleanup task');
     })
     .catch(err => console.error('❌ MongoDB connection error:', err));
 
